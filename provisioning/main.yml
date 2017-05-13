@@ -1,0 +1,38 @@
+---
+
+- name: Installing and configuring Docker 
+  hosts: "docker"
+  become: true
+  #sudo: yes
+  roles:
+    - { role: docker, tags: ["docker"] }
+
+- name: Setting up Logging Server
+  hosts: "elk"
+  become: true
+  #sudo: yes
+  roles:
+    - { role: logging, tags: ["logging"] }
+
+  
+
+- name: Setting up Monitoring Server
+  hosts: "nagios"
+  become: true
+  #sudo: yes
+  roles:
+    - { role: montoring, tags: ["monitoring"] }
+
+
+- name: Setting up filebeat
+  hosts: "general"
+  become: true
+  roles:
+    - { role: filebeat, tags: ["filebeat"] }
+
+
+- name: Setting up slack
+  hosts: "slack"
+  become: true
+  roles:
+    - { role: slack, tags: ["slack"] }
