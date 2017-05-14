@@ -1,0 +1,33 @@
+---
+- name: Logstash apt repo
+  apt_repository:
+    repo="deb http://packages.elastic.co/logstash/2.3/{{ ansible_os_family|lower }} stable main"
+    update_cache=yes
+  when: ansible_os_family == 'Debian'
+  become: true
+
+- name: Install logstash apt packages
+  apt: pkg=logstash={{ elk_logstash.version }}  update_cache=yes
+  become: true
+  when: ansible_os_family == 'Debian'
+  notify: Restart logstash
+
+- name: Logstash conf file
+  template:
+    src={{ item.src }}
+    dest=/etc/logstash/conf.d/{{ item.dest }}
+    owner=root group=root mode=644
+  with_items: " {{ elk_logstash.configs }}"
+  become: true
+  notify: Restart logstash
+
+- name: Logstash pattern files
+  template:
+    src={{ item.src }}
+    dest=/opt/logstash/patterns/{{ item.dest }}
+    owner=root group=root mode=644
+  with_items: " {{ elk_logstash.patterns }}"
+  become: true
+  when: elk_logstash.patterns is defined
+  notify: Restart logstash
+

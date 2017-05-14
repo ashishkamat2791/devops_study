@@ -1,2 +1,18 @@
 ---
-# handlers file for logging
+- name: Restart elasticsearch
+  service:
+    name=elasticsearch
+    state=restarted
+  become: true
+
+- name: Restart logstash
+  service:
+    name=logstash
+    state=restarted
+  become: true
+
+- name: Restart kibana
+  service:
+    name=kibana
+    state=restarted
+  become: true

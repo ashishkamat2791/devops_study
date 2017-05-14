@@ -1,0 +1,11 @@
+---
+# defaults file for java
+
+java:
+  flavor: oracle
+  version: 8u*
+  oracle:
+    - oracle-java8-installer
+    - oracle-java8-set-default
+  openjdk:
+    - openjdk-8-jre-headless

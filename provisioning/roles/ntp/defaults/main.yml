@@ -1,0 +1,55 @@
+---
+# defaults file for collectd
+
+ntp_servers: localhost
+  
+#collectd_patterns:
+#  - name: cassandra
+#    pattern: ".*CassandraDaemon.*"
+#  - name: collectd
+#    pattern: "collectd .*"
+#  - name: zookeeper
+#    pattern: ".*QuorumPeerMain.*"
+#  - name: kafka-connect
+#    pattern: ".*ConnectDistributed.*"
+#  - name: kafka
+#    pattern: ".*SupportedKafka.*"
+#  - name: spark-worker
+#    pattern: ".*org.apache.spark.deploy.worker.Worker.*"
+#  - name: spark-master
+#    pattern: ".*org.apache.spark.deploy.master.Master.*"
+#  - name: spark-executor
+#    pattern: ".*org.apache.spark.executor.*"
+#  - name: filebeat
+#    pattern: "/usr/bin/filebeat"
+
+collectd_patterns:
+  cassandra: ".*CassandraDaemon.*"
+  collectd: "collectd .*"
+  zookeeper: ".*QuorumPeerMain.*"
+  kafka-connect: ".*ConnectDistributed.*"
+  kafka: ".*SupportedKafka.*"
+  kafka-schema: ".*SchemaRegistryMain.*"
+  spark-worker: ".*org.apache.spark.deploy.worker.Worker.*"
+  spark-master: ".*org.apache.spark.deploy.master.Master.*"
+  spark-executor: ".*org.apache.spark.executor.*"
+  filebeat: "/usr/bin/filebeat"
+  jupyter: ".*jupyter notebook.*"
+  grafana: "/usr/sbin/grafana-server.*"
+  influxdb: "/usr/bin/influxd.*"
+  elasticsearch: ".*org.elasticsearch.bootstrap.Elasticsearch.*"
+  kibana: "/opt/kibana/bin/../node/bin/node.*"
+  logstash: ".*logstash/runner.rb.*"
+  hdfs-namenode: ".*org.apache.hadoop.hdfs.server.namenode.NameNode.*"
+  hdfs-datanode: ".*org.apache.hadoop.hdfs.server.datanode.DataNode.*"
+
+
+monitor_exclude: []
+
+host_monitor: []
+
+group_monitor: []
+
+global_monitor:
+  - collectd
+  - filebeat

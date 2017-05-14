@@ -1,0 +1,39 @@
+---
+
+- name: Kibana apt repo
+  apt_repository:
+    repo="deb http://packages.elastic.co/kibana/4.5/{{ ansible_os_family|lower }} stable main"
+    update_cache=yes
+  when: ansible_os_family == 'Debian'
+  become: true
+
+- name: Install kibana apt packages
+  apt: pkg=kibana={{ elk_kibana.version }} update_cache=yes state=present
+  become: true
+  when: ansible_os_family == 'Debian'
+  notify: Restart kibana
+
+- name: Generate kibana htpassword
+  shell:
+    echo "{{ elk_kibana.user }}:$(openssl passwd -crypt {{ elk_kibana.password }}):kibana" |tee .kibana.htpasswd
+  args:
+    chdir: /etc/nginx/conf.d
+    creates: /etc/nginx/conf.d/.kibana.htpasswd
+  become: true
+  register: http_pass_gen
+  when: elk_kibana.user is defined and elk_kibana.password is defined
+
+- name: Kibana htpassword file permissions
+  file:
+    path=/etc/nginx/conf.d/.kibana.htpasswd
+    owner={{ elk_nginx.user }} group=root mode=400
+  become: true
+  when: http_pass_gen|changed
+    
+- name: Nginx config file
+  template:
+    src=nginx-kibana-default.j2
+    dest=/etc/nginx/conf.d/kibana.conf
+    owner=root group=root mode=644
+  become: true
+  notify: Restart nginx

@@ -1,2 +1,17 @@
 ---
-# tasks file for logging
+
+
+- name: ES apt GPG key
+  apt_key:
+    url='http://packages.elastic.co/GPG-KEY-elasticsearch'
+  when: ansible_os_family == 'Debian'
+  become: true
+
+- name: Install Elasticsearch
+  include: elasticsearch.yml
+
+- name: Install Logstash
+  include: logstash.yml
+
+- name: Install Kibana
+  include: kibana.yml

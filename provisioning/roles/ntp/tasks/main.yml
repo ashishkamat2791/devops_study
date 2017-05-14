@@ -1,0 +1,6 @@
+---
+# tasks file for collectd
+
+
+- name: Install NTP
+  include: ntp.yml

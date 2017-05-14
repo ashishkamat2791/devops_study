@@ -1,0 +1,58 @@
+---
+
+- name: WebUpd8 apt repo
+  apt_repository:
+    repo='ppa:webupd8team/java'
+  when: java.flavor == 'oracle' and ansible_distribution == 'Ubuntu'
+  become: true
+
+- name: check apt last update
+  stat: path=/var/cache/apt
+  register: apt_cache_stat
+
+- name: update apt if needed
+  apt: update_cache=yes
+  when: ansible_date_time.epoch|float - apt_cache_stat.stat.mtime > 60*60*12
+  ignore_errors: yes
+
+- name: apt update (FIX)
+  apt: update_cache=yes cache_valid_time=3600
+  register: apt_result
+  until: apt_result|success
+  retries: 3
+  delay: 1
+  become: true
+  ignore_errors: yes
+
+- name: retry if needed using command apt-get update
+  command: apt-get update
+  become: true
+  when: apt_result|failed
+  ignore_errors: yes
+
+- name: Check Oracle license
+  shell:
+    /usr/bin/debconf-show oracle-java8-installer |awk '/accepted-oracle-license/{print $NF}'
+  become: true
+  changed_when: False
+  when: java.flavor == 'oracle' and ansible_distribution == 'Ubuntu'
+  register: webupd8team
+
+- name: Accept Oracle license
+  shell:
+    echo 'oracle-java8-installer shared/accepted-oracle-license-v1-1 select true' | /usr/bin/debconf-set-selections
+  become: true
+  when: java.flavor == 'oracle' and ansible_distribution == 'Ubuntu' and webupd8team.stdout != 'true'
+
+- name: Java apt packages
+  apt: pkg={{ item }}={{ java.version }} update_cache=yes state=present
+  with_items:  " {{ java[java.flavor] }} "
+  become: true
+
+- name: Link default-java
+  file:
+    state=link
+    path=/usr/lib/jvm/default-java
+    src=/usr/lib/jvm/java-8-oracle
+  become: true
+

@@ -1,7 +1,6 @@
 ---
 # tasks file for docker
 
----
 - name: Fail if OS distro is not Ubuntu 14.04
   fail: 
       msg="The role is designed only for Ubuntu 14.04"

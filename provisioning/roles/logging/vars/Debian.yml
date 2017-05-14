@@ -1,0 +1,9 @@
+---
+elk_common_packages:
+    - openntpd
+    - python-apt
+    - python-pycurl
+    - python-pip
+    - supervisor
+    - git-core
+

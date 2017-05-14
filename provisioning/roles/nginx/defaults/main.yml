@@ -1,0 +1,6 @@
+---
+# defaults file for nginx
+
+elk_nginx:
+  port: 80
+  user: nginx

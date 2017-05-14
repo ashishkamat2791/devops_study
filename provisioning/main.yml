@@ -1,4 +1,3 @@
----
 
 - name: Installing and configuring Docker 
   hosts: "docker"
@@ -10,19 +9,21 @@
 - name: Setting up Logging Server
   hosts: "elk"
   become: true
-  #sudo: yes
+  #sudo: yes                       
   roles:
+    - {role: java, tags: ["java"]}
+    - {role: nginx, tags: ["nginx"]} 
+    - {role: ntp, tags: ["ntp"]}
     - { role: logging, tags: ["logging"] }
 
-  
 
 - name: Setting up Monitoring Server
   hosts: "nagios"
   become: true
   #sudo: yes
   roles:
-    - { role: montoring, tags: ["monitoring"] }
-
+    - { role: monitoring, tags: ["monitoring"] }
+    
 
 - name: Setting up filebeat
   hosts: "general"

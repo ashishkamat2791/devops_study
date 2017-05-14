@@ -1,0 +1,18 @@
+---
+
+- name: Install NTP
+  apt: pkg={{item}} state=installed
+  with_items:
+     - ntp
+  become: true
+  notify: Restart NTP
+  when: host_alias_only is not defined or host_alias_only == false
+
+#- name: Update NTP Configuration
+#  template:
+#    src=ntp.conf.j2
+#    dest=/etc/ntp.conf
+#    owner=root group=root mode=644
+#  become: true
+#  notify: Restart NTP
+#  when: host_alias_only is not defined or host_alias_only == false
