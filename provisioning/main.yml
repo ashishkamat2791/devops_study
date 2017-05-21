@@ -18,7 +18,7 @@
 
 
 - name: Setting up Monitoring Server
-  hosts: "nagios"
+  hosts: "zabbix"
   become: true
   #sudo: yes
   roles:
@@ -31,6 +31,12 @@
   roles:
     - { role: filebeat, tags: ["filebeat"] }
 
+
+- name: Setting up zabbix-client
+  hosts: "general"
+  become: true
+  roles:
+    - { role: zabbix, tags: ["filebeat"] }
 
 - name: Setting up slack
   hosts: "slack"
